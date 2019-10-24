@@ -87,7 +87,7 @@ int NoeudInstSi::executer() {
         } else {
             m_sequence.at(i)->executer();
         }
-        
+
     }
     return 0; // La valeur renvoyée ne représente rien !
 }
@@ -137,16 +137,27 @@ int NoeudChaineVar::executer() {
 
     int variable;
     string s = ""; //chaine que l'on va créer
+    string s2;
     for (int i = 0; i < var.size(); i++) {
-        s = s + chaine.at(i); //la chaine
+        
+        s2 = chaine.at(i);
+        s2.erase(0, 1);
+        s2.pop_back();
+
+        s = s + s2; 
 
         variable = var.at(i)->executer();
-
         s = s + to_string(variable); //on convertie le int en string et on ajoute les deux
+        
     }
-    if (var.size() != chaine.size()) //on récupére la dernière chaine si elle existe
-        s = s + chaine.at(var.size());
 
+    if (var.size() != chaine.size()) { //on récupére la dernière chaine si elle existe
+        int j = var.size();
+        s2 = chaine.at(j);
+        s2.erase(0, 1);
+        s2.pop_back();
+        s = s + s2;
+    }
     cout << s << endl;
 
     return 0; // La valeur renvoyée ne représente rien !

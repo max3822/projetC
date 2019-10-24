@@ -262,6 +262,7 @@ Noeud* Interpreteur::instSi() {
             return nullptr;
         }
 
+
         Noeud* sequence = seqInst(); // On mémorise la séquence d'instruction  
         vectorCondition.push_back(condition);
         vectorSequence.push_back(sequence);
@@ -277,19 +278,7 @@ Noeud* Interpreteur::instSi() {
         vectorCondition.push_back(nullptr);
         vectorSequence.push_back(sequence);
     }
-
-    try {
-        if (m_lecteur.getSymbole() != "finsi") {
-            static char messageWhat[256]; // création du message d'erreur
-            sprintf(messageWhat,
-                    "Ligne %d, Colonne %d - Erreur de syntaxe : finsi est attendu", //colonne sans sens
-                    m_lecteur.getLigne(), m_lecteur.getColonne()); // col et nom pour le nom et la position de l'erreur (sauvegardé avant)
-            throw SyntaxeException(messageWhat);
-        }
-    } catch (SyntaxeException const& e) {
-        cout << e.what() << endl;
-    }
-    m_lecteur.avancer();
+    testerEtAvancer("finsi");
 
     return new NoeudInstSi(vectorCondition, vectorSequence);
 }
@@ -407,12 +396,14 @@ Noeud * Interpreteur::ecrire() {
     vector<Noeud*> variable;
     vector<string> chaine;
     string s1 = m_lecteur.getSymbole().getChaine(); // chaine lu
+    
     //-------------------------------------------------
     m_lecteur.avancer();
     for (int j = 0; j < s1.size(); j++) { //nombre de % pour les variables
         if (s1.at(j) == '%')
             i++;
     }
+    
     if (i != 0) {// variable trouvé 
         for (int j = 0; j < i; j++) {
             testerEtAvancer(",");
@@ -424,17 +415,23 @@ Noeud * Interpreteur::ecrire() {
     testerEtAvancer(")");
     testerEtAvancer(";");
     //------------------------------------------------- test de la validité : nb variable = nb %
-    for (int j = 1; j < s1.size(); j++) { //parcours de la chaine initial sans le "
+    for (int j = 0; j < s1.size(); j++) { //parcours de la chaine initial
         s2 = s2 + s1.at(j);
         if (s1.at(j) == '%') {
             s2.pop_back(); //on retire le %
+            s2 = s2 +'"';
+            m_table.chercheAjoute(s2);
             chaine.push_back(s2); //on enléve le %
-            s2 = ""; // on vide s2
+            s2 = '"'; // on vide s2
         }
     }
-    s2.pop_back(); // on retire le "
+    m_table.chercheAjoute(s2);
     chaine.push_back(s2); //pour le reste de la chaine
-
+    for(int i =0; i < chaine.size(); i++){
+        cout << chaine.at(i) << endl;
+    }
+    
+    
 
     return new NoeudChaineVar(variable, chaine);
 }
@@ -442,7 +439,7 @@ Noeud * Interpreteur::ecrire() {
 Noeud * Interpreteur::lire() {
 
     //lire(a);
-    testerEtAvancer("lire");
+    this->m_lecteur.avancer();
     testerEtAvancer("(");
     tester("<VARIABLE>");
     this->m_table.chercheAjoute(m_lecteur.getSymbole());
