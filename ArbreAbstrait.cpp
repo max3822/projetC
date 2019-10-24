@@ -179,23 +179,24 @@ int Noeudpour::executer() {
 
 }
 
-Noeudlire::Noeudlire(Noeud* var, string nom)
-: var(var), nom(nom) {
+Noeudlire::Noeudlire(vector<Noeud*> vars)
+: vars(vars) {
 }
 
 int Noeudlire::executer() {
-
-    string s = "";
-    while (Symbole(s) != "<ENTIER>") {
-        cout << "saisir la valeur de " << nom << " : ";
-        getline(cin, s);
-        if (Symbole(s) != "<ENTIER>") {
-            cout << "un entier est attendu !" << endl;
+    Noeud* var;
+    for(int j=0;j<vars.size();j++) {
+        string s = "";
+        while (Symbole(s) != "<ENTIER>") {
+            cout << "saisir la valeur : ";
+            getline(cin, s);
+            if (Symbole(s) != "<ENTIER>") {
+                cout << "un entier est attendu !" << endl;
+            }
         }
+        int i = atoi(s.c_str());
+        ((SymboleValue*) vars.at(j))->setValeur(i);
     }
-    int i = atoi(s.c_str());
-    ((SymboleValue*) var)->setValeur(i);
-
     return 0; // La valeur renvoyée ne représente rien !
 }
 
