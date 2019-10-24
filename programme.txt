@@ -1,0 +1,22 @@
+# Fichier de test
+# Les lignes de commentaires commencent par #
+
+procedure principale()
+
+i = 0;
+j = 5;
+
+
+si (i == 1)
+ecrire("%",j);
+finsi
+
+pour(i=0; i<10; i++;)
+ecrire("%",i);
+finpour
+
+lire(a);
+ecrire("% %",a ,i);
+
+finproc
+# Commentaire Final
