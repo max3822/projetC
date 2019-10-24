@@ -137,14 +137,12 @@ class Noeudpour : public Noeud { //renvoie la chaine créer
 class Noeudlire : public Noeud { //renvoie la chaine créer
 
   public:
-    Noeudlire(Noeud* var, string nom);
+    Noeudlire(vector<Noeud*> vars);
    ~Noeudlire() {}         // A cause du destructeur virtuel de la classe Noeud
     int executer() override; // Exécute l'instruction si : si condition vraie on exécute la séquence
 
   private:
-      Noeud* var;
-      string nom; //affichage seulement
- 
+      vector<Noeud*> vars;
 };
 
 class Noeudrepeter : public Noeud { //renvoie la chaine créer

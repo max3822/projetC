@@ -444,16 +444,18 @@ Noeud * Interpreteur::lire() {
     //lire(a);
     testerEtAvancer("lire");
     testerEtAvancer("(");
-    tester("<VARIABLE>");
-    this->m_table.chercheAjoute(m_lecteur.getSymbole());
-    string nom = m_lecteur.getSymbole().getChaine();
-    Noeud* var = m_table.chercheAjoute(nom);
-
-
-    this->m_lecteur.avancer();
+    vector<Noeud*> variables;
+    while(m_lecteur.getSymbole().getChaine() != ")") {
+        tester("<VARIABLE>");
+        this->m_table.chercheAjoute(m_lecteur.getSymbole());
+        Noeud* var = m_table.chercheAjoute(m_lecteur.getSymbole());
+        variables.push_back(var);
+        this->m_lecteur.avancer();
+    }
+    
     testerEtAvancer(")");
     testerEtAvancer(";");
-    return new Noeudlire(var, nom);
+    return new Noeudlire(variables);
 }
 
 
